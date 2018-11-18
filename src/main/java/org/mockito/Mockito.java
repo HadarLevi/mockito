@@ -40,6 +40,7 @@ import org.mockito.verification.Timeout;
 import org.mockito.verification.VerificationAfterDelay;
 import org.mockito.verification.VerificationMode;
 import org.mockito.verification.VerificationWithTimeout;
+import org.mockito.verification.TimeoutToCompletion;
 
 /**
  * <p align="left"><img src="logo.png" srcset="logo@2x.png 2x" alt="Mockito logo"/></p>
@@ -2244,6 +2245,21 @@ public class Mockito extends ArgumentMatchers {
     public static void verifyZeroInteractions(Object... mocks) {
         MOCKITO_CORE.verifyNoMoreInteractions(mocks);
     }
+
+
+    @CheckReturnValue
+    public static VerificationWithTimeout timeoutToCompletion(long millis) {
+        return new TimeoutToCompletion(millis, VerificationModeFactory.times(1));
+    }
+
+    public static <T> T verifyCompletion(T mock) { //my addition
+        return MOCKITO_CORE.verifyCompletion(mock,times(1));
+    }
+
+    public static <T> T verifyCompletion(T mock, VerificationMode mode) { //my addition
+        return MOCKITO_CORE.verifyCompletion(mock, mode);
+    }
+
 
     /**
      * Use <code>doThrow()</code> when you want to stub the void method with an exception.

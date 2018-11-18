@@ -11,4 +11,6 @@ public interface VerificationAwareInvocation extends DescribedInvocation {
 
     boolean isVerified();
 
+    boolean isCompleted();
+
 }

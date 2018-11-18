@@ -95,7 +95,7 @@ public class VerificationOverTimeImpl implements VerificationMode {
         }
     }
 
-    private AssertionError handleVerifyException(AssertionError e) {
+    protected AssertionError handleVerifyException(AssertionError e) {
         if (canRecoverFromFailure(delegate)) {
             sleep(pollingPeriodMillis);
             return e;

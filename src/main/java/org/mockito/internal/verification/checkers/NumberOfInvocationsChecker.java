@@ -7,6 +7,7 @@ package org.mockito.internal.verification.checkers;
 
 import java.util.Arrays;
 import java.util.List;
+import org.mockito.exceptions.verification.TooManyActualInvocations;
 import org.mockito.internal.reporting.Discrepancy;
 import org.mockito.internal.verification.api.InOrderContext;
 import org.mockito.invocation.Invocation;
@@ -16,10 +17,12 @@ import org.mockito.invocation.MatchableInvocation;
 import static org.mockito.internal.exceptions.Reporter.neverWantedButInvoked;
 import static org.mockito.internal.exceptions.Reporter.tooLittleActualInvocations;
 import static org.mockito.internal.exceptions.Reporter.tooLittleActualInvocationsInOrder;
+import static org.mockito.internal.exceptions.Reporter.tooManyActualCompletedInvocations;
 import static org.mockito.internal.exceptions.Reporter.tooManyActualInvocations;
 import static org.mockito.internal.exceptions.Reporter.tooManyActualInvocationsInOrder;
 import static org.mockito.internal.invocation.InvocationMarker.markVerified;
 import static org.mockito.internal.invocation.InvocationMarker.markVerifiedInOrder;
+import static org.mockito.internal.invocation.InvocationsFinder.findCompletedInvocations;
 import static org.mockito.internal.invocation.InvocationsFinder.findFirstMatchingUnverifiedInvocation;
 import static org.mockito.internal.invocation.InvocationsFinder.findInvocations;
 import static org.mockito.internal.invocation.InvocationsFinder.findMatchingChunk;
@@ -76,6 +79,14 @@ public class NumberOfInvocationsChecker {
             context.markVerified( next );
             lastLocation = next.getLocation();
             actualCount++;
+        }
+    }
+
+    public static void checkNumberOfCompletedInvocations(List<Invocation> invocations, MatchableInvocation wanted, int wantedCount) {
+        List<Invocation> completedInvocations= findCompletedInvocations(invocations);
+        try{checkNumberOfInvocations(completedInvocations, wanted,wantedCount);}
+        catch (TooManyActualInvocations tooManyActualInvocations){
+            throw tooManyActualCompletedInvocations(tooManyActualInvocations.getMessage());
         }
     }
 }

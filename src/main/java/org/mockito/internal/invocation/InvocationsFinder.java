@@ -29,6 +29,10 @@ public class InvocationsFinder {
         return ListUtil.filter(unverified, new RemoveNotMatching(wanted));
     }
 
+    public static List<Invocation> findCompletedInvocations(List<Invocation> invocations) {
+        return ListUtil.filter(invocations, new RemoveUncompleted());
+    }
+
     /**
      * some examples how it works:
      *
@@ -167,6 +171,13 @@ public class InvocationsFinder {
 
         public boolean isOut(Invocation invocation) {
             return !orderingContext.isVerified(invocation);
+        }
+    }
+
+    private static class RemoveUncompleted implements Filter<Invocation> {
+
+        public boolean isOut(Invocation invocation) {
+            return !invocation.isCompleted();
         }
     }
 

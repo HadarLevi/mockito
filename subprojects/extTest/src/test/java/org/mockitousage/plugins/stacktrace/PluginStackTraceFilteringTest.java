@@ -13,8 +13,9 @@ import org.mockito.exceptions.verification.WantedButNotInvoked;
 import org.mockitousage.IMethods;
 import org.mockitoutil.TestBase;
 
-import static org.junit.Assert.fail;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 
 public class PluginStackTraceFilteringTest extends TestBase {

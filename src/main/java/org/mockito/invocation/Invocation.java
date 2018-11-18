@@ -23,6 +23,12 @@ import org.mockito.NotExtensible;
 public interface Invocation extends InvocationOnMock, DescribedInvocation {
 
     /**
+     * @return whether the invocation has been completed.
+     * Needed for {@link org.mockito.Mockito#verifyNoMoreInteractions(Object...)}
+     */
+    boolean isCompleted();
+
+    /**
      * @return whether the invocation has been already verified.
      * Needed for {@link org.mockito.Mockito#verifyNoMoreInteractions(Object...)}
      */

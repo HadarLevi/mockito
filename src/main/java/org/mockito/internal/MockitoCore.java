@@ -4,6 +4,8 @@
  */
 package org.mockito.internal;
 
+import java.util.Arrays;
+import java.util.List;
 import org.mockito.InOrder;
 import org.mockito.MockSettings;
 import org.mockito.MockingDetails;
@@ -31,9 +33,6 @@ import org.mockito.stubbing.LenientStubber;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.stubbing.Stubber;
 import org.mockito.verification.VerificationMode;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static org.mockito.internal.exceptions.Reporter.missingMethodInvocation;
 import static org.mockito.internal.exceptions.Reporter.mocksHaveToBePassedToVerifyNoMoreInteractions;
@@ -103,6 +102,11 @@ public class MockitoCore {
         mockingProgress.verificationStarted(new MockAwareVerificationMode(mock, actualMode, mockingProgress.verificationListeners()));
         return mock;
     }
+
+    public <T> T verifyCompletion(T mock, VerificationMode mode){
+        return verify(mock, mode);
+    }
+
 
     public <T> void reset(T... mocks) {
         MockingProgress mockingProgress = mockingProgress();

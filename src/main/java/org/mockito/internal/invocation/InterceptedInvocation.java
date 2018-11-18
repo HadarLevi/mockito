@@ -4,15 +4,15 @@
  */
 package org.mockito.internal.invocation;
 
-import org.mockito.internal.invocation.mockref.MockReference;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.mockito.internal.exceptions.VerificationAwareInvocation;
+import org.mockito.internal.invocation.mockref.MockReference;
 import org.mockito.internal.reporting.PrintSettings;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.Location;
 import org.mockito.invocation.StubInfo;
-
-import java.lang.reflect.Method;
-import java.util.Arrays;
 
 import static org.mockito.internal.exceptions.Reporter.cannotCallAbstractRealMethod;
 
@@ -32,6 +32,7 @@ public class InterceptedInvocation implements Invocation, VerificationAwareInvoc
     private boolean verified;
     private boolean isIgnoredForVerification;
     private StubInfo stubInfo;
+    private AtomicBoolean completed;
 
     public InterceptedInvocation(MockReference<Object> mockRef,
                                  MockitoMethod mockitoMethod,
@@ -46,6 +47,12 @@ public class InterceptedInvocation implements Invocation, VerificationAwareInvoc
         this.realMethod = realMethod;
         this.location = location;
         this.sequenceNumber = sequenceNumber;
+        this.completed=new AtomicBoolean(false);
+    }
+
+    @Override
+    public boolean isCompleted(){//my addition
+        return completed.get();
     }
 
     @Override
@@ -124,7 +131,9 @@ public class InterceptedInvocation implements Invocation, VerificationAwareInvoc
         if (!realMethod.isInvokable()) {
             throw cannotCallAbstractRealMethod();
         }
-        return realMethod.invoke();
+        Object ret= realMethod.invoke();
+        completed.set(true);
+        return ret;
     }
 
     @Override
