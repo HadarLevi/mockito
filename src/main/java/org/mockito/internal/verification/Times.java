@@ -5,7 +5,9 @@
 
 package org.mockito.internal.verification;
 
+import static org.mockito.internal.verification.checkers.MissingInvocationChecker.checkMissingCompletedInvocation;
 import static org.mockito.internal.verification.checkers.MissingInvocationChecker.checkMissingInvocation;
+import static org.mockito.internal.verification.checkers.NumberOfInvocationsChecker.checkNumberOfCompletedInvocations;
 import static org.mockito.internal.verification.checkers.NumberOfInvocationsChecker.checkNumberOfInvocations;
 
 import java.util.List;
@@ -15,9 +17,10 @@ import org.mockito.internal.verification.api.VerificationData;
 import org.mockito.internal.verification.api.VerificationDataInOrder;
 import org.mockito.internal.verification.api.VerificationInOrderMode;
 import org.mockito.invocation.Invocation;
+import org.mockito.verification.VerificationCompletionMode;
 import org.mockito.verification.VerificationMode;
 
-public class Times implements VerificationInOrderMode, VerificationMode {
+public class Times implements VerificationInOrderMode, VerificationMode, VerificationCompletionMode {
 
     final int wantedCount;
 
@@ -47,6 +50,15 @@ public class Times implements VerificationInOrderMode, VerificationMode {
             checkMissingInvocation(allInvocations, wanted, data.getOrderingContext());
         }
         checkNumberOfInvocations(allInvocations, wanted, wantedCount, data.getOrderingContext());
+    }
+
+    @Override
+    public void verifyCompletion(VerificationData data) {
+        verify(data);
+        if (wantedCount > 0) {
+            checkMissingCompletedInvocation(data.getAllInvocations(), data.getTarget());
+        }
+        checkNumberOfCompletedInvocations(data.getAllInvocations(), data.getTarget(), wantedCount);
     }
 
     @Override

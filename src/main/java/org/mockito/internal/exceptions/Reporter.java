@@ -8,6 +8,7 @@ package org.mockito.internal.exceptions;
 import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.exceptions.misusing.*;
+import org.mockito.exceptions.verification.InvokedButNotCompleted;
 import org.mockito.exceptions.verification.MoreThanAllowedActualInvocations;
 import org.mockito.exceptions.verification.NeverWantedButInvoked;
 import org.mockito.exceptions.verification.NoInteractionsWanted;
@@ -15,6 +16,7 @@ import org.mockito.exceptions.verification.SmartNullPointerException;
 import org.mockito.exceptions.verification.TooLittleActualInvocations;
 import org.mockito.exceptions.verification.TooManyActualInvocations;
 import org.mockito.exceptions.verification.VerificationInOrderFailure;
+import org.mockito.exceptions.verification.VerifyCompletionFailure;
 import org.mockito.exceptions.verification.WantedButNotInvoked;
 import org.mockito.internal.debugging.LocationImpl;
 import org.mockito.internal.exceptions.util.ScenarioPrinter;
@@ -27,6 +29,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.invocation.Location;
 import org.mockito.listeners.InvocationListener;
 import org.mockito.mock.SerializableMode;
+import org.mockito.verification.VerificationMode;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -151,6 +154,15 @@ public class Reporter {
                 "    verify(mock, atLeastOnce()).someMethod();",
                 "    not: verify(mock.someMethod());",
                 "Also, if you use @Mock annotation don't miss initMocks()"
+        ));
+    }
+
+    public static MockitoException nullPassedToVerifyCompletion() {
+        return new NullInsteadOfMockException(join(
+            "Argument(s) passed is null!",
+            "Examples of correct verifications:",
+            "    verifyCompletion(mockOne, mockTwo);",
+            "    verifyCompletion(mockOne, mockTwo);"
         ));
     }
 
@@ -358,6 +370,41 @@ public class Reporter {
         ));
     }
 
+    public static MockitoAssertionError invokedButNotCompleted(DescribedInvocation wanted, List<? extends DescribedInvocation> invocations) {
+        String wantedMessage= join(
+            "Wanted but invoked and not completed:",
+            wanted.toString(),
+            new LocationImpl(),
+            ""
+        );
+        String message;
+        if (invocations.isEmpty()) {
+            message = "Actually, there were zero completed interactions with this mock.\n";
+        }else {
+            StringBuilder sb = new StringBuilder(
+                "\nHowever, there " + were_exactly_x_interactions(invocations.size()) + " that completed with this mock:\n");
+            for (DescribedInvocation i : invocations) {
+                sb.append(i.toString())
+                  .append("\n")
+                  .append(i.getLocation())
+                  .append("\n\n");
+            }
+            message=sb.toString();
+        }
+        return new InvokedButNotCompleted(wantedMessage+ message);
+    }
+
+    public static MockitoAssertionError tooManyActualCompletedInvocations(String message) {
+        return new VerifyCompletionFailure(join("Verify completion failure- TooManyCompletedInvocations: " + message + " completed invocation."));
+
+    }
+
+    public static MockitoAssertionError NotImplementingVerificationCompletionMode(VerificationMode verificationMode) {
+        throw new MockitoException(verificationMode.getClass().getSimpleName() +
+            " is not implemented to work with VerificationCompletionMode" );
+    }
+
+
     public static MockitoAssertionError tooManyActualInvocations(int wantedCount, int actualCount, DescribedInvocation wanted, List<Location> locations) {
         String message = createTooManyInvocationsMessage(wantedCount, actualCount, wanted, locations);
         return new TooManyActualInvocations(message);
@@ -428,6 +475,11 @@ public class Reporter {
                 "Verification in order failure:" + message
         ));
     }
+
+    public static MockitoAssertionError tooLittleActualCompletedInvocations(String message) {
+        return new VerifyCompletionFailure(join("Verify completion failure: " + message + " completed invocation."));
+    }
+
 
     public static MockitoAssertionError noMoreInteractionsWanted(Invocation undesired, List<VerificationAwareInvocation> invocations) {
         ScenarioPrinter scenarioPrinter = new ScenarioPrinter();
@@ -519,6 +571,10 @@ public class Reporter {
 
     public static MoreThanAllowedActualInvocations wantedAtMostX(int maxNumberOfInvocations, int foundSize) {
         return new MoreThanAllowedActualInvocations(join("Wanted at most " + pluralize(maxNumberOfInvocations) + " but was " + foundSize));
+    }
+
+    public static MoreThanAllowedActualInvocations wantedAtMostCompletedInvocations(int maxNumberOfInvocations, int foundSize) {
+        return new MoreThanAllowedActualInvocations(join("Verify completion failure: ", "Wanted at most " + pluralize(maxNumberOfInvocations) + "completed invocations, but was " + foundSize+" completed invocations."));
     }
 
     public static MockitoException misplacedArgumentMatcher(List<LocalizedMatcher> lastMatchers) {

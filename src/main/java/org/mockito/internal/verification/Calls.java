@@ -15,9 +15,10 @@ import org.mockito.internal.verification.api.VerificationDataInOrder;
 import org.mockito.internal.verification.api.VerificationInOrderMode;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.MatchableInvocation;
+import org.mockito.verification.VerificationCompletionMode;
 import org.mockito.verification.VerificationMode;
 
-public class Calls implements VerificationMode, VerificationInOrderMode {
+public class Calls implements VerificationMode, VerificationInOrderMode, VerificationCompletionMode {
 
     final int wantedCount;
 
@@ -50,5 +51,10 @@ public class Calls implements VerificationMode, VerificationInOrderMode {
     @Override
     public VerificationMode description(String description) {
         return VerificationModeFactory.description(this, description);
+    }
+
+    @Override
+    public void verifyCompletion(VerificationData data) {
+        verify(data);
     }
 }

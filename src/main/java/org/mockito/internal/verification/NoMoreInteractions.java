@@ -16,9 +16,10 @@ import org.mockito.internal.verification.api.VerificationData;
 import org.mockito.internal.verification.api.VerificationDataInOrder;
 import org.mockito.internal.verification.api.VerificationInOrderMode;
 import org.mockito.invocation.Invocation;
+import org.mockito.verification.VerificationCompletionMode;
 import org.mockito.verification.VerificationMode;
 
-public class NoMoreInteractions implements VerificationMode, VerificationInOrderMode {
+public class NoMoreInteractions implements VerificationMode, VerificationInOrderMode, VerificationCompletionMode {
 
     @SuppressWarnings("unchecked")
     public void verify(VerificationData data) {
@@ -40,5 +41,10 @@ public class NoMoreInteractions implements VerificationMode, VerificationInOrder
     @Override
     public VerificationMode description(String description) {
         return VerificationModeFactory.description(this, description);
+    }
+
+    @Override
+    public void verifyCompletion(VerificationData data) {
+        verify(data);
     }
 }

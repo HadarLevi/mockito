@@ -17,9 +17,12 @@ import org.mockito.internal.stubbing.InvocationContainerImpl;
 import org.mockito.internal.stubbing.OngoingStubbingImpl;
 import org.mockito.internal.stubbing.StubberImpl;
 import org.mockito.internal.util.DefaultMockingDetails;
+import org.mockito.internal.verification.AtCompletionWrapper;
 import org.mockito.internal.verification.MockAwareVerificationMode;
 import org.mockito.internal.verification.VerificationDataImpl;
 import org.mockito.internal.verification.VerificationModeFactory;
+import org.mockito.internal.verification.VerificationWrapper;
+import org.mockito.internal.verification.VerificationWrapperAtCompletion;
 import org.mockito.internal.verification.api.InOrderContext;
 import org.mockito.internal.verification.api.VerificationDataInOrder;
 import org.mockito.internal.verification.api.VerificationDataInOrderImpl;
@@ -30,6 +33,7 @@ import org.mockito.quality.Strictness;
 import org.mockito.stubbing.LenientStubber;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.stubbing.Stubber;
+import org.mockito.verification.VerificationCompletionMode;
 import org.mockito.verification.VerificationMode;
 
 import java.util.Arrays;
@@ -93,6 +97,15 @@ public class MockitoCore {
         VerificationMode actualMode = mockingProgress.maybeVerifyLazily(mode);
         mockingProgress.verificationStarted(new MockAwareVerificationMode(mock, actualMode, mockingProgress.verificationListeners()));
         return mock;
+    }
+
+    public <T> T verifyCompletion(T mock, VerificationMode mode) {
+        if (mode instanceof VerificationWrapper) {
+            return verify(mock, new VerificationWrapperAtCompletion((VerificationWrapper) mode));
+        }else if (!(mode instanceof VerificationCompletionMode)) {
+            throw NotImplementingVerificationCompletionMode(mode);
+        }
+        return verify(mock, new AtCompletionWrapper((VerificationCompletionMode) mode));
     }
 
     public <T> void reset(T... mocks) {
