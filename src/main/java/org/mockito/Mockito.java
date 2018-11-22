@@ -2252,13 +2252,23 @@ public class Mockito extends ArgumentMatchers {
         return new TimeoutToCompletion(millis, VerificationModeFactory.times(1));
     }
 
-    public static <T> T verifyCompletion(T mock) { //my addition
-        return MOCKITO_CORE.verifyCompletion(mock,times(1));
+    public static <T> T verifyCompletion(T mock) {
+        return MOCKITO_CORE.verifyCompletion(mock,times(1), false);
     }
 
-    public static <T> T verifyCompletion(T mock, VerificationMode mode) { //my addition
-        return MOCKITO_CORE.verifyCompletion(mock, mode);
+    public static <T> T verifyCompletion(T mock, VerificationMode mode) {
+        return MOCKITO_CORE.verifyCompletion(mock, mode, false);
     }
+
+    public static <T> T verifyAndWaitUntilCompletion(T mock) {
+        return MOCKITO_CORE.verifyCompletion(mock,times(1), true);
+    }
+
+    public static <T> T verifyAndWaitUntilCompletion(T mock, VerificationMode mode) {
+        return MOCKITO_CORE.verifyCompletion(mock, mode, true);
+    }
+
+
 
 
     /**

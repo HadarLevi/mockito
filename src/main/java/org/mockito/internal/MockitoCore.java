@@ -19,9 +19,12 @@ import org.mockito.internal.stubbing.InvocationContainerImpl;
 import org.mockito.internal.stubbing.OngoingStubbingImpl;
 import org.mockito.internal.stubbing.StubberImpl;
 import org.mockito.internal.util.DefaultMockingDetails;
+import org.mockito.internal.verification.AtCompletionWrapper;
 import org.mockito.internal.verification.MockAwareVerificationMode;
 import org.mockito.internal.verification.VerificationDataImpl;
 import org.mockito.internal.verification.VerificationModeFactory;
+import org.mockito.internal.verification.VerificationWrapper;
+import org.mockito.internal.verification.VerificationWrapperAtCompletion;
 import org.mockito.internal.verification.api.InOrderContext;
 import org.mockito.internal.verification.api.VerificationDataInOrder;
 import org.mockito.internal.verification.api.VerificationDataInOrderImpl;
@@ -32,8 +35,10 @@ import org.mockito.quality.Strictness;
 import org.mockito.stubbing.LenientStubber;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.stubbing.Stubber;
+import org.mockito.verification.VerificationCompletionMode;
 import org.mockito.verification.VerificationMode;
 
+import static org.mockito.internal.exceptions.Reporter.NotImplementingVerificationCompletionMode;
 import static org.mockito.internal.exceptions.Reporter.missingMethodInvocation;
 import static org.mockito.internal.exceptions.Reporter.mocksHaveToBePassedToVerifyNoMoreInteractions;
 import static org.mockito.internal.exceptions.Reporter.mocksHaveToBePassedWhenCreatingInOrder;
@@ -103,8 +108,13 @@ public class MockitoCore {
         return mock;
     }
 
-    public <T> T verifyCompletion(T mock, VerificationMode mode){
-        return verify(mock, mode);
+    public <T> T verifyCompletion(T mock, VerificationMode mode,  boolean waitUntilCompletion){
+        if (mode instanceof VerificationWrapper) {
+            return verify(mock, new VerificationWrapperAtCompletion((VerificationWrapper) mode, waitUntilCompletion));
+        }  else if (!(mode instanceof VerificationCompletionMode)) {
+            throw NotImplementingVerificationCompletionMode(mode);
+        }
+        return verify(mock, new AtCompletionWrapper((VerificationCompletionMode) mode, waitUntilCompletion));
     }
 
 
