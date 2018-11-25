@@ -47,7 +47,7 @@ public class InterceptedInvocation implements Invocation, VerificationAwareInvoc
         this.realMethod = realMethod;
         this.location = location;
         this.sequenceNumber = sequenceNumber;
-            this.completed=new AtomicBoolean(mockitoMethod.isAbstract() ? true : false);
+        this.completed=new AtomicBoolean(mockitoMethod.isAbstract());
     }
 
     @Override

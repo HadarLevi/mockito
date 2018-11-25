@@ -12,7 +12,10 @@ import org.mockito.internal.creation.MockSettingsImpl;
 import org.mockito.internal.debugging.MockitoDebuggerImpl;
 import org.mockito.internal.framework.DefaultMockitoFramework;
 import org.mockito.internal.session.DefaultMockitoSessionBuilder;
+import org.mockito.internal.verification.AtCompletionWrapper;
+import org.mockito.internal.verification.VerificationCompletionModeFactory;
 import org.mockito.internal.verification.VerificationModeFactory;
+import org.mockito.internal.verification.VerificationWrapperAtCompletion;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.InvocationFactory;
 import org.mockito.invocation.MockHandler;
@@ -37,10 +40,11 @@ import org.mockito.stubbing.Stubbing;
 import org.mockito.stubbing.VoidAnswer1;
 import org.mockito.verification.After;
 import org.mockito.verification.Timeout;
+import org.mockito.verification.TimeoutToCompletion;
 import org.mockito.verification.VerificationAfterDelay;
 import org.mockito.verification.VerificationMode;
 import org.mockito.verification.VerificationWithTimeout;
-import org.mockito.verification.TimeoutToCompletion;
+
 
 /**
  * <p align="left"><img src="logo.png" srcset="logo@2x.png 2x" alt="Mockito logo"/></p>
@@ -2249,27 +2253,16 @@ public class Mockito extends ArgumentMatchers {
 
     @CheckReturnValue
     public static VerificationWithTimeout timeoutToCompletion(long millis) {
-        return new TimeoutToCompletion(millis, VerificationModeFactory.times(1));
+        return new TimeoutToCompletion(millis,VerificationCompletionModeFactory.times(1));
     }
 
     public static <T> T verifyCompletion(T mock) {
-        return MOCKITO_CORE.verifyCompletion(mock,times(1), false);
+        return MOCKITO_CORE.verifyCompletion(mock,times(1));
     }
 
     public static <T> T verifyCompletion(T mock, VerificationMode mode) {
-        return MOCKITO_CORE.verifyCompletion(mock, mode, false);
+        return MOCKITO_CORE.verifyCompletion(mock, mode);
     }
-
-    public static <T> T verifyAndWaitUntilCompletion(T mock) {
-        return MOCKITO_CORE.verifyCompletion(mock,times(1), true);
-    }
-
-    public static <T> T verifyAndWaitUntilCompletion(T mock, VerificationMode mode) {
-        return MOCKITO_CORE.verifyCompletion(mock, mode, true);
-    }
-
-
-
 
     /**
      * Use <code>doThrow()</code> when you want to stub the void method with an exception.

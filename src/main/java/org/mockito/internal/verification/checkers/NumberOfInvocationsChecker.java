@@ -35,7 +35,6 @@ public class NumberOfInvocationsChecker {
 
     public static void checkNumberOfInvocations(List<Invocation> invocations, MatchableInvocation wanted, int wantedCount) {
         List<Invocation> actualInvocations = findInvocations(invocations, wanted);
-
         int actualCount = actualInvocations.size();
         if (wantedCount > actualCount) {
             List<Location> allLocations = getAllLocations(actualInvocations);

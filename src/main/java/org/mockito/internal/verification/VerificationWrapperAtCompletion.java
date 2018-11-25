@@ -9,10 +9,9 @@ import static org.mockito.internal.exceptions.Reporter.NotImplementingVerificati
 public class VerificationWrapperAtCompletion implements VerificationMode{
     private final VerificationMode delegate;
 
-    public VerificationWrapperAtCompletion(VerificationWrapper<?> verificationWrapper, boolean waitUntilCompletion) {
+    public VerificationWrapperAtCompletion(VerificationWrapper<?> verificationWrapper) {
         VerificationMode verificationMode = verificationWrapper.wrappedVerification;
-        VerificationMode atCompletionWrappedVerificationMode = wrapAtCompletion(verificationWrapper, verificationMode, waitUntilCompletion);
-        delegate = verificationWrapper.copySelfWithNewVerificationMode(atCompletionWrappedVerificationMode);
+        delegate = wrapAtCompletion( verificationMode);
     }
 
     @Override
@@ -25,20 +24,17 @@ public class VerificationWrapperAtCompletion implements VerificationMode{
         return VerificationModeFactory.description(this, description);
     }
 
-    private VerificationMode wrapAtCompletion(VerificationWrapper<?> verificationWrapper, VerificationMode verificationMode, boolean waitUntilCompletion) {
+    public static VerificationMode wrapAtCompletion( VerificationMode verificationMode) {
         if (verificationMode instanceof VerificationCompletionMode) {
-            final VerificationCompletionMode verificationCompletionMode = (VerificationCompletionMode) verificationMode;
-            return new AtCompletionWrapper(verificationCompletionMode, waitUntilCompletion);
+            return new AtCompletionWrapper((VerificationCompletionMode)verificationMode);
         }
         if (verificationMode instanceof VerificationOverTimeImpl) {
             final VerificationOverTimeImpl verificationOverTime = (VerificationOverTimeImpl) verificationMode;
-            if (verificationOverTime.getDelegate() instanceof VerificationCompletionMode) {
-                return new VerificationOverTimeImpl(verificationOverTime.getPollingPeriodMillis(),
-                    verificationOverTime.getTimer().duration(),
-                    wrapAtCompletion(verificationWrapper, verificationOverTime.getDelegate(),false),
-                    verificationOverTime.isReturnOnSuccess());
-            }
+             return new VerificationAtCompletionOverTime(verificationOverTime.copyWithVerificationMode(wrapAtCompletion(verificationOverTime.getDelegate())));
         }
+        if (verificationMode instanceof VerificationAtCompletionOverTime)
+            return verificationMode;
+
         throw NotImplementingVerificationCompletionMode(verificationMode);
     }
 

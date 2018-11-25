@@ -30,7 +30,6 @@ public class MissingInvocationChecker {
 
     public static void checkMissingInvocation(List<Invocation> invocations, MatchableInvocation wanted) {
         List<Invocation> actualInvocations = findInvocations(invocations, wanted);
-
         if (!actualInvocations.isEmpty()){
             return;
         }

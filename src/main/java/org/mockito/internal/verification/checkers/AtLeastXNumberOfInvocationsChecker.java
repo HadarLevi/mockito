@@ -6,16 +6,21 @@
 package org.mockito.internal.verification.checkers;
 
 import java.util.List;
+import org.mockito.exceptions.verification.TooLittleActualInvocations;
+import org.mockito.exceptions.verification.TooManyActualInvocations;
 import org.mockito.internal.verification.api.InOrderContext;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.Location;
 import org.mockito.invocation.MatchableInvocation;
 
+import static org.mockito.internal.exceptions.Reporter.tooLittleActualCompletedInvocations;
 import static org.mockito.internal.exceptions.Reporter.tooLittleActualInvocations;
 import static org.mockito.internal.exceptions.Reporter.tooLittleActualInvocationsInOrder;
+import static org.mockito.internal.exceptions.Reporter.tooManyActualCompletedInvocations;
 import static org.mockito.internal.invocation.InvocationMarker.markVerified;
 import static org.mockito.internal.invocation.InvocationMarker.markVerifiedInOrder;
 import static org.mockito.internal.invocation.InvocationsFinder.findAllMatchingUnverifiedChunks;
+import static org.mockito.internal.invocation.InvocationsFinder.findCompletedInvocations;
 import static org.mockito.internal.invocation.InvocationsFinder.findInvocations;
 import static org.mockito.internal.invocation.InvocationsFinder.getAllLocations;
 
@@ -44,5 +49,13 @@ public class AtLeastXNumberOfInvocationsChecker {
         }
 
         markVerifiedInOrder(chunk, wanted, orderingContext);
+    }
+
+    public static void checkAtLeastNumberOfCompletedInvocations(List<Invocation> invocations, MatchableInvocation wanted, int wantedCount) {
+        List<Invocation> completedInvocations= findCompletedInvocations(invocations);
+        try{checkAtLeastNumberOfInvocations(completedInvocations, wanted,wantedCount);}
+        catch (TooLittleActualInvocations tooLittleActualInvocations){
+            throw tooLittleActualCompletedInvocations(tooLittleActualInvocations.getMessage()+" completed invocation.");
+        }
     }
 }

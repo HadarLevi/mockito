@@ -6,14 +6,12 @@
 package org.mockito.internal.verification;
 
 import java.util.List;
-import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.verification.api.VerificationData;
 import org.mockito.internal.verification.api.VerificationDataInOrder;
 import org.mockito.internal.verification.api.VerificationInOrderMode;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.MatchableInvocation;
-import org.mockito.verification.TimeoutToCompletion;
 import org.mockito.verification.VerificationCompletionMode;
 import org.mockito.verification.VerificationMode;
 
@@ -35,13 +33,10 @@ public class Times implements VerificationInOrderMode, VerificationMode, Verific
 
     @Override
     public void verify(VerificationData data) {
-        List<Invocation> invocations = data.getAllInvocations();
-        MatchableInvocation wanted = data.getTarget();
-
         if (wantedCount > 0) {
              checkMissingInvocation(data.getAllInvocations(), data.getTarget());
         }
-        checkNumberOfInvocations(invocations, wanted, wantedCount);
+        checkNumberOfInvocations(data.getAllInvocations(), data.getTarget(), wantedCount);
     }
     @Override
     public void verifyInOrder(VerificationDataInOrder data) {
@@ -67,30 +62,9 @@ public class Times implements VerificationInOrderMode, VerificationMode, Verific
     @Override
     public void verifyCompletion(VerificationData data){
         verify(data);
-        List<Invocation> invocations =data.getAllInvocations();
-        MatchableInvocation wanted = data.getTarget();
         if (wantedCount > 0) {
             checkMissingCompletedInvocation(data.getAllInvocations(), data.getTarget());
         }
-        checkNumberOfCompletedInvocations(invocations, wanted, wantedCount);
+        checkNumberOfCompletedInvocations(data.getAllInvocations(), data.getTarget(), wantedCount);
     }
-
-    /*
-    verify that the wanted function is called,
-    if the wanted function hasn't been called the wanted number of time, this function will throw exception immediately
-    if the function has been called the number of times that wanted
-    but at least one of the calls hasn't been completed yet
-    the function will wait until those missing calls will be completed.
-     */
-    public void verifyAndWaitUntilCompletion(VerificationData data){
-        verify(data);
-        boolean completed=false;
-        while(!completed) {
-            try {
-                new TimeoutToCompletion(Long.MAX_VALUE, this).verify(data);
-                completed=true;
-            }catch (MockitoAssertionError e){}
-        }
-    }
-
 }

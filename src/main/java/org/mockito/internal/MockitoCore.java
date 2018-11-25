@@ -108,13 +108,13 @@ public class MockitoCore {
         return mock;
     }
 
-    public <T> T verifyCompletion(T mock, VerificationMode mode,  boolean waitUntilCompletion){
+    public <T> T verifyCompletion(T mock, VerificationMode mode){
         if (mode instanceof VerificationWrapper) {
-            return verify(mock, new VerificationWrapperAtCompletion((VerificationWrapper) mode, waitUntilCompletion));
-        }  else if (!(mode instanceof VerificationCompletionMode)) {
+            return verify(mock, new VerificationWrapperAtCompletion((VerificationWrapper) mode));
+        }else if (!(mode instanceof VerificationCompletionMode)) {
             throw NotImplementingVerificationCompletionMode(mode);
         }
-        return verify(mock, new AtCompletionWrapper((VerificationCompletionMode) mode, waitUntilCompletion));
+        return verify(mock, new AtCompletionWrapper((VerificationCompletionMode) mode));
     }
 
 

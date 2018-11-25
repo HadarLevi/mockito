@@ -4,20 +4,25 @@
  */
 package org.mockito.internal.verification;
 
+import static org.mockito.internal.exceptions.Reporter.invokedButNotCompleted;
 import static org.mockito.internal.exceptions.Reporter.noMoreInteractionsWanted;
 import static org.mockito.internal.exceptions.Reporter.wantedButNotInvoked;
 import static org.mockito.internal.invocation.InvocationMarker.markVerified;
+import static org.mockito.internal.invocation.InvocationsFinder.findCompletedInvocations;
 import static org.mockito.internal.invocation.InvocationsFinder.findFirstUnverified;
 import static org.mockito.internal.invocation.InvocationsFinder.findInvocations;
+import static org.mockito.internal.verification.checkers.MissingInvocationChecker.checkMissingCompletedInvocation;
+import static org.mockito.internal.verification.checkers.NumberOfInvocationsChecker.checkNumberOfCompletedInvocations;
 
 import java.util.List;
 
 import org.mockito.invocation.MatchableInvocation;
 import org.mockito.internal.verification.api.VerificationData;
 import org.mockito.invocation.Invocation;
+import org.mockito.verification.VerificationCompletionMode;
 import org.mockito.verification.VerificationMode;
 
-public class Only implements VerificationMode {
+public class Only implements VerificationMode, VerificationCompletionMode {
 
     @SuppressWarnings("unchecked")
     public void verify(VerificationData data) {
@@ -36,5 +41,21 @@ public class Only implements VerificationMode {
 
     public VerificationMode description(String description) {
         return VerificationModeFactory.description(this, description);
+    }
+
+    @Override
+    public void verifyCompletion(VerificationData data) {
+        verify(data);
+        MatchableInvocation target = data.getTarget();
+        List<Invocation> completedInvocations= findCompletedInvocations(data.getAllInvocations());
+        List<Invocation> chunk = findInvocations(completedInvocations,target);
+        if (completedInvocations.size() != 1 && !chunk.isEmpty()) {
+            Invocation unverified = findFirstUnverified(completedInvocations);
+            throw noMoreInteractionsWanted(unverified, (List) completedInvocations);
+        }
+        if (completedInvocations.size() != 1 || chunk.isEmpty()) {
+            throw invokedButNotCompleted(target, chunk);
+        }
+        markVerified(chunk.get(0), target);
     }
 }
