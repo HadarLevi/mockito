@@ -13,9 +13,8 @@ import org.mockito.internal.debugging.MockitoDebuggerImpl;
 import org.mockito.internal.framework.DefaultMockitoFramework;
 import org.mockito.internal.session.DefaultMockitoSessionBuilder;
 import org.mockito.internal.verification.AtCompletionWrapper;
-import org.mockito.internal.verification.VerificationCompletionModeFactory;
+
 import org.mockito.internal.verification.VerificationModeFactory;
-import org.mockito.internal.verification.VerificationWrapperAtCompletion;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.InvocationFactory;
 import org.mockito.invocation.MockHandler;
@@ -2253,7 +2252,7 @@ public class Mockito extends ArgumentMatchers {
 
     @CheckReturnValue
     public static VerificationWithTimeout timeoutToCompletion(long millis) {
-        return new TimeoutToCompletion(millis,VerificationCompletionModeFactory.times(1));
+        return new TimeoutToCompletion(millis,new AtCompletionWrapper(VerificationModeFactory.times(1)));
     }
 
     public static <T> T verifyCompletion(T mock) {

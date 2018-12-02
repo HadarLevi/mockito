@@ -2,11 +2,11 @@ package org.mockito.exceptions.verification;
 
 import org.mockito.exceptions.base.MockitoAssertionError;
 
-public class TooLittleActualCompletedInvocations extends MockitoAssertionError {
+public class VerifyCompletionFailure extends MockitoAssertionError {
 
     private static final long serialVersionUID = 1L;
 
-    public TooLittleActualCompletedInvocations(String message) {
+    public VerifyCompletionFailure(String message) {
         super(message);
     }
 }
