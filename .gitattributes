@@ -2,4 +2,4 @@
 * text=auto
 
 # Allow gradle.bat to retain CRLF
-gradlew.bat text eol=crlf
+gradlew.bat text eol=lf

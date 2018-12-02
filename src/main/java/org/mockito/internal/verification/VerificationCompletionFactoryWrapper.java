@@ -1,7 +1,9 @@
+/*
+ * Copyright (c) 2007 Mockito contributors
+ * This program is made available under the terms of the MIT License.
+ */
 package org.mockito.internal.verification;
 
-import org.mockito.internal.verification.api.VerificationData;
-import org.mockito.verification.VerificationCompletionMode;
 import org.mockito.verification.VerificationMode;
 
 public abstract class VerificationCompletionFactoryWrapper<WrapperType extends VerificationMode> extends VerificationWrapper implements VerificationMode {

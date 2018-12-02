@@ -61,13 +61,12 @@ allprojects { proj ->
         options.warnings = false
         options.encoding = 'UTF-8'
     }
-    //TODO: remove the comment below and fix all checkstyle problems
-    /*
+
     apply plugin: 'checkstyle'
     checkstyle {
        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
     }
-    */
+
 }
 
 configurations {
