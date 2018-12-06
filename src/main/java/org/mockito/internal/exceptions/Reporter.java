@@ -28,7 +28,6 @@ import org.mockito.invocation.Invocation;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.invocation.Location;
 import org.mockito.listeners.InvocationListener;
-import org.mockito.mock.MockName;
 import org.mockito.mock.SerializableMode;
 import org.mockito.verification.VerificationMode;
 
@@ -289,10 +288,10 @@ public class Reporter {
         ));
     }
 
-    public static MockitoException stubPassedToVerify() {
+    public static MockitoException stubPassedToVerify(Object mock) {
         return new CannotVerifyStubOnlyMock(join(
-                "Argument passed to verify() is a stubOnly() mock, not a full blown mock!",
-                "If you intend to verify invocations on a mock, don't use stubOnly() in its MockSettings."
+                "Argument \"" + MockUtil.getMockName(mock) + "\" passed to verify is a stubOnly() mock which cannot be verified.",
+                "If you intend to verify invocations on this mock, don't use stubOnly() in its MockSettings."
         ));
     }
 
@@ -489,7 +488,7 @@ public class Reporter {
         return new NoInteractionsWanted(join(
                 "No interactions wanted here:",
                 new LocationImpl(),
-                "But found this interaction on mock '" + safelyGetMockName(undesired.getMock()) + "':",
+                "But found this interaction on mock '" + MockUtil.getMockName(undesired.getMock()) + "':",
                 undesired.getLocation(),
                 scenario
         ));
@@ -499,7 +498,7 @@ public class Reporter {
         return new VerificationInOrderFailure(join(
                 "No interactions wanted here:",
                 new LocationImpl(),
-                "But found this interaction on mock '" + safelyGetMockName(undesired.getMock()) + "':",
+                "But found this interaction on mock '" + MockUtil.getMockName(undesired.getMock()) + "':",
                 undesired.getLocation()
         ));
     }
@@ -565,7 +564,7 @@ public class Reporter {
                 actualType + " cannot be returned by " + methodName + "()",
                 methodName + "() should return " + expectedType,
                 "",
-                "The default answer of " + safelyGetMockName(mock) + " that was configured on the mock is probably incorrectly implemented.",
+                "The default answer of " + MockUtil.getMockName(mock) + " that was configured on the mock is probably incorrectly implemented.",
                 ""
         ));
     }
@@ -753,7 +752,7 @@ public class Reporter {
 
     public static MockitoException cannotInjectDependency(Field field, Object matchingMock, Exception details) {
         return new MockitoException(join(
-                "Mockito couldn't inject mock dependency '" + safelyGetMockName(matchingMock) + "' on field ",
+                "Mockito couldn't inject mock dependency '" + MockUtil.getMockName(matchingMock) + "' on field ",
                 "'" + field + "'",
                 "whose type '" + field.getDeclaringClass().getCanonicalName() + "' was annotated by @InjectMocks in your test.",
                 "Also I failed because: " + exceptionCauseMessageIfAvailable(details),
@@ -796,7 +795,7 @@ public class Reporter {
     public static MockitoException invalidArgumentPositionRangeAtInvocationTime(InvocationOnMock invocation, boolean willReturnLastParameter, int argumentIndex) {
         return new MockitoException(join(
                 "Invalid argument index for the current invocation of method : ",
-                " -> " + safelyGetMockName(invocation.getMock()) + "." + invocation.getMethod().getName() + "()",
+                " -> " + MockUtil.getMockName(invocation.getMock()) + "." + invocation.getMethod().getName() + "()",
                 "",
                 (willReturnLastParameter ?
                         "Last parameter wanted" :
@@ -830,7 +829,7 @@ public class Reporter {
         return new WrongTypeOfReturnValue(join(
                 "The argument of type '" + actualType.getSimpleName() + "' cannot be returned because the following ",
                 "method should return the type '" + expectedType + "'",
-                " -> " + safelyGetMockName(invocation.getMock()) + "." + invocation.getMethod().getName() + "()",
+                " -> " + MockUtil.getMockName(invocation.getMock()) + "." + invocation.getMethod().getName() + "()",
                 "",
                 "The reason for this error can be :",
                 "1. The wanted argument position is incorrect.",
@@ -867,7 +866,7 @@ public class Reporter {
     public static MockitoException delegatedMethodHasWrongReturnType(Method mockMethod, Method delegateMethod, Object mock, Object delegate) {
         return new MockitoException(join(
                 "Methods called on delegated instance must have compatible return types with the mock.",
-                "When calling: " + mockMethod + " on mock: " + safelyGetMockName(mock),
+                "When calling: " + mockMethod + " on mock: " + MockUtil.getMockName(mock),
                 "return type should be: " + mockMethod.getReturnType().getSimpleName() + ", but was: " + delegateMethod.getReturnType().getSimpleName(),
                 "Check that the instance passed to delegatesTo() is of the correct type or contains compatible methods",
                 "(delegate instance had type: " + delegate.getClass().getSimpleName() + ")"
@@ -877,7 +876,7 @@ public class Reporter {
     public static MockitoException delegatedMethodDoesNotExistOnDelegate(Method mockMethod, Object mock, Object delegate) {
         return new MockitoException(join(
                 "Methods called on mock must exist in delegated instance.",
-                "When calling: " + mockMethod + " on mock: " + safelyGetMockName(mock),
+                "When calling: " + mockMethod + " on mock: " + MockUtil.getMockName(mock),
                 "no such method was found.",
                 "Check that the instance passed to delegatesTo() is of the correct type or contains compatible methods",
                 "(delegate instance had type: " + delegate.getClass().getSimpleName() + ")"
@@ -903,10 +902,6 @@ public class Reporter {
         return new MockitoException(join(
                 "Exception type cannot be null.",
                 "This may happen with doThrow(Class)|thenThrow(Class) family of methods if passing null parameter."));
-    }
-
-    private static MockName safelyGetMockName(Object mock) {
-        return MockUtil.getMockName(mock);
     }
 
     public static UnnecessaryStubbingException formatUnncessaryStubbingException(Class<?> testClass, Collection<Invocation> unnecessaryStubbings) {
