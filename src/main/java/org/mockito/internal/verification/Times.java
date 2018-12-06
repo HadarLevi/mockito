@@ -5,6 +5,11 @@
 
 package org.mockito.internal.verification;
 
+import static org.mockito.internal.verification.checkers.MissingInvocationChecker.checkMissingCompletedInvocation;
+import static org.mockito.internal.verification.checkers.MissingInvocationChecker.checkMissingInvocation;
+import static org.mockito.internal.verification.checkers.NumberOfInvocationsChecker.checkNumberOfCompletedInvocations;
+import static org.mockito.internal.verification.checkers.NumberOfInvocationsChecker.checkNumberOfInvocations;
+
 import java.util.List;
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.verification.api.VerificationData;
@@ -14,11 +19,6 @@ import org.mockito.invocation.Invocation;
 import org.mockito.invocation.MatchableInvocation;
 import org.mockito.verification.VerificationCompletionMode;
 import org.mockito.verification.VerificationMode;
-
-import static org.mockito.internal.verification.checkers.MissingInvocationChecker.checkMissingCompletedInvocation;
-import static org.mockito.internal.verification.checkers.MissingInvocationChecker.checkMissingInvocation;
-import static org.mockito.internal.verification.checkers.NumberOfInvocationsChecker.checkNumberOfCompletedInvocations;
-import static org.mockito.internal.verification.checkers.NumberOfInvocationsChecker.checkNumberOfInvocations;
 
 public class Times implements VerificationInOrderMode, VerificationMode, VerificationCompletionMode {
 
@@ -33,10 +33,13 @@ public class Times implements VerificationInOrderMode, VerificationMode, Verific
 
     @Override
     public void verify(VerificationData data) {
+        List<Invocation> invocations = data.getAllInvocations();
+        MatchableInvocation wanted = data.getTarget();
+
         if (wantedCount > 0) {
              checkMissingInvocation(data.getAllInvocations(), data.getTarget());
         }
-        checkNumberOfInvocations(data.getAllInvocations(), data.getTarget(), wantedCount);
+        checkNumberOfInvocations(invocations, wanted, wantedCount);
     }
     @Override
     public void verifyInOrder(VerificationDataInOrder data) {
@@ -50,6 +53,15 @@ public class Times implements VerificationInOrderMode, VerificationMode, Verific
     }
 
     @Override
+    public void verifyCompletion(VerificationData data) {
+        verify(data);
+        if (wantedCount > 0) {
+            checkMissingCompletedInvocation(data.getAllInvocations(), data.getTarget());
+        }
+        checkNumberOfCompletedInvocations(data.getAllInvocations(), data.getTarget(), wantedCount);
+    }
+
+    @Override
     public String toString() {
         return "Wanted invocations count: " + wantedCount;
     }
@@ -57,14 +69,5 @@ public class Times implements VerificationInOrderMode, VerificationMode, Verific
     @Override
     public VerificationMode description(String description) {
         return VerificationModeFactory.description(this, description);
-    }
-
-    @Override
-    public void verifyCompletion(VerificationData data){
-        verify(data);
-        if (wantedCount > 0) {
-            checkMissingCompletedInvocation(data.getAllInvocations(), data.getTarget());
-        }
-        checkNumberOfCompletedInvocations(data.getAllInvocations(), data.getTarget(), wantedCount);
     }
 }

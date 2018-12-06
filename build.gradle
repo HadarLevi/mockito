@@ -75,7 +75,6 @@ dependencies {
     compile libraries.bytebuddy, libraries.bytebuddyagent
 
     compileOnly libraries.junit4, libraries.hamcrest
-
     compile libraries.objenesis
 
     testCompile libraries.asm

@@ -11,8 +11,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.timeoutToCompletion;
 import static org.mockito.Mockito.verify;
 
-
-public class VerifyCompletionTest extends TestBase{
+public class VerifyCompletionTest extends TestBase {
 
     @Before
     @Override

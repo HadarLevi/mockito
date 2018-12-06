@@ -11,8 +11,6 @@ import org.mockito.verification.VerificationMode;
 public class AtCompletionWrapper implements VerificationMode, VerificationCompletionMode {
     private final VerificationCompletionMode mode;
 
-
-
     public AtCompletionWrapper(VerificationCompletionMode mode) {
         this.mode = mode;
     }

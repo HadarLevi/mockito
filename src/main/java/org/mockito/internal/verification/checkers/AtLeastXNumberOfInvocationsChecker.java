@@ -51,7 +51,9 @@ public class AtLeastXNumberOfInvocationsChecker {
 
     public static void checkAtLeastNumberOfCompletedInvocations(List<Invocation> invocations, MatchableInvocation wanted, int wantedCount) {
         List<Invocation> completedInvocations= findCompletedInvocations(invocations);
-        try{checkAtLeastNumberOfInvocations(completedInvocations, wanted,wantedCount);}
+        try{
+            checkAtLeastNumberOfInvocations(completedInvocations, wanted,wantedCount);
+        }
         catch (TooLittleActualInvocations tooLittleActualInvocations){
             throw tooLittleActualCompletedInvocations(tooLittleActualInvocations.getMessage());
         }

@@ -4,15 +4,16 @@
  */
 package org.mockito.internal.invocation;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicBoolean;
-import org.mockito.internal.exceptions.VerificationAwareInvocation;
 import org.mockito.internal.invocation.mockref.MockReference;
+import org.mockito.internal.exceptions.VerificationAwareInvocation;
 import org.mockito.internal.reporting.PrintSettings;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.Location;
 import org.mockito.invocation.StubInfo;
+
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.mockito.internal.exceptions.Reporter.cannotCallAbstractRealMethod;
 
@@ -51,7 +52,7 @@ public class InterceptedInvocation implements Invocation, VerificationAwareInvoc
     }
 
     @Override
-    public boolean isCompleted(){//my addition
+    public boolean isCompleted() {
         return completed.get();
     }
 

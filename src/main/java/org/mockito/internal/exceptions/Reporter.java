@@ -5,28 +5,9 @@
 
 package org.mockito.internal.exceptions;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.exceptions.base.MockitoException;
-import org.mockito.exceptions.misusing.CannotStubVoidMethodWithReturnValue;
-import org.mockito.exceptions.misusing.CannotVerifyStubOnlyMock;
-import org.mockito.exceptions.misusing.FriendlyReminderException;
-import org.mockito.exceptions.misusing.InjectMocksException;
-import org.mockito.exceptions.misusing.InvalidUseOfMatchersException;
-import org.mockito.exceptions.misusing.MissingMethodInvocationException;
-import org.mockito.exceptions.misusing.NotAMockException;
-import org.mockito.exceptions.misusing.NullInsteadOfMockException;
-import org.mockito.exceptions.misusing.PotentialStubbingProblem;
-import org.mockito.exceptions.misusing.RedundantListenerException;
-import org.mockito.exceptions.misusing.UnfinishedMockingSessionException;
-import org.mockito.exceptions.misusing.UnfinishedStubbingException;
-import org.mockito.exceptions.misusing.UnfinishedVerificationException;
-import org.mockito.exceptions.misusing.UnnecessaryStubbingException;
-import org.mockito.exceptions.misusing.WrongTypeOfReturnValue;
+import org.mockito.exceptions.misusing.*;
 import org.mockito.exceptions.verification.InvokedButNotCompleted;
 import org.mockito.exceptions.verification.MoreThanAllowedActualInvocations;
 import org.mockito.exceptions.verification.NeverWantedButInvoked;
@@ -50,6 +31,12 @@ import org.mockito.listeners.InvocationListener;
 import org.mockito.mock.MockName;
 import org.mockito.mock.SerializableMode;
 import org.mockito.verification.VerificationMode;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static org.mockito.internal.reporting.Pluralizer.pluralize;
 import static org.mockito.internal.reporting.Pluralizer.were_exactly_x_interactions;

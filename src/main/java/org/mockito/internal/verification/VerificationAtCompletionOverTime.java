@@ -10,9 +10,9 @@ import org.mockito.verification.VerificationMode;
 
 import static org.mockito.internal.exceptions.Reporter.NotImplementingVerificationCompletionMode;
 
-public class VerificationAtCompletionOverTime extends VerificationOverTimeImpl{
+public class VerificationAtCompletionOverTime extends VerificationOverTimeImpl {
 
-    public VerificationAtCompletionOverTime (VerificationOverTimeImpl verificationOverTime){
+    public VerificationAtCompletionOverTime (VerificationOverTimeImpl verificationOverTime) {
         super(verificationOverTime.getPollingPeriodMillis(), verificationOverTime.getDelegate(), verificationOverTime.isReturnOnSuccess(), verificationOverTime.getTimer());
     }
 
@@ -30,5 +30,4 @@ public class VerificationAtCompletionOverTime extends VerificationOverTimeImpl{
             return new VerificationAtCompletionOverTime(getPollingPeriodMillis(), getTimer().duration(), new AtCompletionWrapper((VerificationCompletionMode)verificationMode), isReturnOnSuccess());
         throw NotImplementingVerificationCompletionMode(verificationMode);
     }
-
 }

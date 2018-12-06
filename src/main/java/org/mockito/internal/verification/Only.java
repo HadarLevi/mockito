@@ -4,13 +4,6 @@
  */
 package org.mockito.internal.verification;
 
-import java.util.List;
-import org.mockito.internal.verification.api.VerificationData;
-import org.mockito.invocation.Invocation;
-import org.mockito.invocation.MatchableInvocation;
-import org.mockito.verification.VerificationCompletionMode;
-import org.mockito.verification.VerificationMode;
-
 import static org.mockito.internal.exceptions.Reporter.invokedButNotCompleted;
 import static org.mockito.internal.exceptions.Reporter.noMoreInteractionsWanted;
 import static org.mockito.internal.exceptions.Reporter.wantedButNotInvoked;
@@ -18,6 +11,14 @@ import static org.mockito.internal.invocation.InvocationMarker.markVerified;
 import static org.mockito.internal.invocation.InvocationsFinder.findCompletedInvocations;
 import static org.mockito.internal.invocation.InvocationsFinder.findFirstUnverified;
 import static org.mockito.internal.invocation.InvocationsFinder.findInvocations;
+
+import java.util.List;
+
+import org.mockito.internal.verification.api.VerificationData;
+import org.mockito.invocation.Invocation;
+import org.mockito.invocation.MatchableInvocation;
+import org.mockito.verification.VerificationCompletionMode;
+import org.mockito.verification.VerificationMode;
 
 public class Only implements VerificationMode, VerificationCompletionMode {
 
@@ -42,7 +43,6 @@ public class Only implements VerificationMode, VerificationCompletionMode {
 
     @Override
     public void verifyCompletion(VerificationData data) {
-        verify(data);
         MatchableInvocation target = data.getTarget();
         List<Invocation> completedInvocations= findCompletedInvocations(data.getAllInvocations());
         List<Invocation> chunk = findInvocations(completedInvocations,target);

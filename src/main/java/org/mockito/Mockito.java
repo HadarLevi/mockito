@@ -13,7 +13,6 @@ import org.mockito.internal.debugging.MockitoDebuggerImpl;
 import org.mockito.internal.framework.DefaultMockitoFramework;
 import org.mockito.internal.session.DefaultMockitoSessionBuilder;
 import org.mockito.internal.verification.AtCompletionWrapper;
-
 import org.mockito.internal.verification.VerificationModeFactory;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.InvocationFactory;
@@ -43,7 +42,6 @@ import org.mockito.verification.TimeoutToCompletion;
 import org.mockito.verification.VerificationAfterDelay;
 import org.mockito.verification.VerificationMode;
 import org.mockito.verification.VerificationWithTimeout;
-
 
 /**
  * <p align="left"><img src="logo.png" srcset="logo@2x.png 2x" alt="Mockito logo"/></p>

@@ -6,7 +6,6 @@ package org.mockito.verification;
 
 import org.mockito.internal.util.Timer;
 import org.mockito.internal.verification.VerificationAtCompletionOverTime;
-
 import org.mockito.internal.verification.VerificationModeFactory;
 import org.mockito.internal.verification.VerificationWrapper;
 

@@ -61,7 +61,6 @@ public class AtMost implements VerificationMode, VerificationCompletionMode {
 
     @Override
     public void verifyCompletion(VerificationData data) {
-        verify(data);
         MatchableInvocation wanted = data.getTarget();
         List<Invocation> completedInvocation=findCompletedInvocations(data.getAllInvocations());
         List<Invocation> found = findInvocations(completedInvocation, wanted);

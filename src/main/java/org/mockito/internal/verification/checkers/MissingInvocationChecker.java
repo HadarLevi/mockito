@@ -5,13 +5,6 @@
 
 package org.mockito.internal.verification.checkers;
 
-import java.util.List;
-import org.mockito.exceptions.verification.WantedButNotInvoked;
-import org.mockito.internal.reporting.SmartPrinter;
-import org.mockito.internal.verification.api.InOrderContext;
-import org.mockito.invocation.Invocation;
-import org.mockito.invocation.MatchableInvocation;
-
 import static org.mockito.internal.exceptions.Reporter.argumentsAreDifferent;
 import static org.mockito.internal.exceptions.Reporter.invokedButNotCompleted;
 import static org.mockito.internal.exceptions.Reporter.wantedButNotInvoked;
@@ -23,6 +16,14 @@ import static org.mockito.internal.invocation.InvocationsFinder.findPreviousVeri
 import static org.mockito.internal.invocation.InvocationsFinder.findSimilarInvocation;
 import static org.mockito.internal.verification.argumentmatching.ArgumentMatchingTool.getSuspiciouslyNotMatchingArgsIndexes;
 
+import java.util.List;
+
+import org.mockito.exceptions.verification.WantedButNotInvoked;
+import org.mockito.internal.reporting.SmartPrinter;
+import org.mockito.internal.verification.api.InOrderContext;
+import org.mockito.invocation.Invocation;
+import org.mockito.invocation.MatchableInvocation;
+
 public class MissingInvocationChecker {
 
     private MissingInvocationChecker() {
@@ -30,6 +31,7 @@ public class MissingInvocationChecker {
 
     public static void checkMissingInvocation(List<Invocation> invocations, MatchableInvocation wanted) {
         List<Invocation> actualInvocations = findInvocations(invocations, wanted);
+
         if (!actualInvocations.isEmpty()){
             return;
         }

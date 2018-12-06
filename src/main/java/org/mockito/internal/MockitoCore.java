@@ -4,8 +4,6 @@
  */
 package org.mockito.internal;
 
-import java.util.Arrays;
-import java.util.List;
 import org.mockito.InOrder;
 import org.mockito.MockSettings;
 import org.mockito.MockingDetails;
@@ -37,6 +35,9 @@ import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.stubbing.Stubber;
 import org.mockito.verification.VerificationCompletionMode;
 import org.mockito.verification.VerificationMode;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.internal.exceptions.Reporter.NotImplementingVerificationCompletionMode;
 import static org.mockito.internal.exceptions.Reporter.missingMethodInvocation;
@@ -108,7 +109,7 @@ public class MockitoCore {
         return mock;
     }
 
-    public <T> T verifyCompletion(T mock, VerificationMode mode){
+    public <T> T verifyCompletion(T mock, VerificationMode mode) {
         if (mode instanceof VerificationWrapper) {
             return verify(mock, new VerificationWrapperAtCompletion((VerificationWrapper) mode));
         }else if (!(mode instanceof VerificationCompletionMode)) {
@@ -116,7 +117,6 @@ public class MockitoCore {
         }
         return verify(mock, new AtCompletionWrapper((VerificationCompletionMode) mode));
     }
-
 
     public <T> void reset(T... mocks) {
         MockingProgress mockingProgress = mockingProgress();

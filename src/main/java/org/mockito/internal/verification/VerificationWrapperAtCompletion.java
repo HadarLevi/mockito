@@ -10,7 +10,7 @@ import org.mockito.verification.VerificationMode;
 
 import static org.mockito.internal.exceptions.Reporter.NotImplementingVerificationCompletionMode;
 
-public class VerificationWrapperAtCompletion implements VerificationMode{
+public class VerificationWrapperAtCompletion implements VerificationMode {
     private final VerificationMode delegate;
 
     public VerificationWrapperAtCompletion(VerificationWrapper<?> verificationWrapper) {
@@ -41,5 +41,4 @@ public class VerificationWrapperAtCompletion implements VerificationMode{
 
         throw NotImplementingVerificationCompletionMode(verificationMode);
     }
-
 }
