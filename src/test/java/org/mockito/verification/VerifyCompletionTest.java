@@ -3,6 +3,7 @@ package org.mockito.verification;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.exceptions.verification.InvokedButNotCompleted;
 import org.mockitoutil.TestBase;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -10,6 +11,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.timeoutToCompletion;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyCompletion;
 
 public class VerifyCompletionTest extends TestBase {
 
@@ -18,9 +20,9 @@ public class VerifyCompletionTest extends TestBase {
     public void init() {
         //we need to get rid of parent implementation this time
     }
-/*
+
     @Test(expected = InvokedButNotCompleted.class)
-    public void InvokedButNotCompletedWithTimeoutToCompletionTest() {
+    public void invoke_but_not_completed_with_timeout_to_completion_test() {
         TestMock testMock = Mockito.mock(TestMock.class);
         doReturn(true).when(testMock).getTestMockMethod(any(String.class));
         final TestSpy testSpy = spy(new TestSpy(testMock));
@@ -40,9 +42,9 @@ public class VerifyCompletionTest extends TestBase {
             catch (InterruptedException e){}
         }
     }
-*/
+
     @Test
-    public void TimeoutToCompletionTest() {
+    public void timeout_to_completion_test() {
         TestMock testMock1 = Mockito.mock(TestMock.class);
         doReturn(true).when(testMock1).getTestMockMethod(any(String.class));
         final TestSpy testSpy1 = spy(new TestSpy(testMock1));
@@ -59,9 +61,9 @@ public class VerifyCompletionTest extends TestBase {
         try{methodRunner1.join();}
         catch (InterruptedException e){}
     }
-/*
+
     @Test(expected = InvokedButNotCompleted.class)
-    public void InvokedButNotCompletedTest() {
+    public void invoked_but_not_completed_test() {
         TestMock testMock2 = Mockito.mock(TestMock.class);
         doReturn(true).when(testMock2).getTestMockMethod(any(String.class));
         final TestSpy testSpy2 = spy(new TestSpy(testMock2));
@@ -78,29 +80,6 @@ public class VerifyCompletionTest extends TestBase {
         }finally {
             try{methodRunner2.join();}
             catch (InterruptedException e){}
-        }
-    }
-    */
-
-
-    interface TestMock {
-        boolean getTestMockMethod(String message);
-    }
-
-    public class TestSpy {
-        TestMock someone;
-
-        public TestSpy(TestMock someone) {
-            this.someone = someone;
-        }
-
-        public void useTheTestMock() {
-            try{
-                Thread.sleep(1000);
-                someone.getTestMockMethod("FAKE MESSAGE");
-            }catch (InterruptedException e){
-                System.out.println(e.getMessage());
-            }
         }
     }
 }

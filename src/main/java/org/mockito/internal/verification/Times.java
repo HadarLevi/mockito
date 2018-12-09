@@ -12,11 +12,11 @@ import static org.mockito.internal.verification.checkers.NumberOfInvocationsChec
 
 import java.util.List;
 import org.mockito.exceptions.base.MockitoException;
+import org.mockito.invocation.MatchableInvocation;
 import org.mockito.internal.verification.api.VerificationData;
 import org.mockito.internal.verification.api.VerificationDataInOrder;
 import org.mockito.internal.verification.api.VerificationInOrderMode;
 import org.mockito.invocation.Invocation;
-import org.mockito.invocation.MatchableInvocation;
 import org.mockito.verification.VerificationCompletionMode;
 import org.mockito.verification.VerificationMode;
 
